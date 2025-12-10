@@ -1,0 +1,54 @@
+{
+  "agent": {
+    "metrics_collection_interval": 60,
+    "run_as_user": "Administrator"
+  },
+  "metrics": {
+    "namespace": "GreenLab/Lab",
+    "append_dimensions": {
+      "InstanceId": "${aws:InstanceId}",
+      "InstanceType": "${aws:InstanceType}",
+      "Environment": "lab"
+    },
+    "metrics_collected": {
+      "LogicalDisk": {
+        "measurement": ["% Free Space","% Used Space"],
+        "metrics_collection_interval": 60,
+        "resources": ["*"]
+      },
+      "Memory": {
+        "measurement": ["% Committed Bytes In Use"],
+        "metrics_collection_interval": 60
+      },
+      "Processor": {
+        "measurement": ["% Processor Time"],
+        "metrics_collection_interval": 60,
+        "resources": ["_Total"]
+      }
+    }
+  },
+  "logs": {
+    "logs_collected": {
+      "windows_events": {
+        "collect_list": [
+          {
+            "event_name": "Application",
+            "log_group_name": "/GreenLab/Windows/Application",
+            "event_levels": ["ERROR","WARNING","INFORMATION"]
+          },
+          {
+            "event_name": "System",
+            "log_group_name": "/GreenLab/Windows/System",
+            "event_levels": ["ERROR","WARNING"]
+          },
+          {
+            "event_name": "Security",
+            "log_group_name": "/GreenLab/Windows/Security",
+            "event_levels": ["ERROR","WARNING","INFORMATION"]
+          }
+        ]
+      }
+    }
+  }
+}
+
