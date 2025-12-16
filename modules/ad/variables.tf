@@ -40,5 +40,8 @@ variable "cw_windows_document_name" {
   description = "Name of the Windows CloudWatch SSM Document"
 }
 
-
+variable "domain_name" {
+  type        = string
+  description = "The Active Directory domain name, e.g., lab.local"
+}
 

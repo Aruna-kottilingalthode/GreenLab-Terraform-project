@@ -19,7 +19,7 @@ variable "security_group_ids" {
 }
 
 variable "user_data" {
-  type = string
+  type    = string
   default = ""
 }
 

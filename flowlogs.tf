@@ -55,11 +55,11 @@ resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
 # VPC Flow Log
 #########################
 resource "aws_flow_log" "vpc_flow_log" {
-  log_destination      = aws_cloudwatch_log_group.vpc_flow_logs.arn
-  log_destination_type = "cloud-watch-logs"
-  traffic_type         = "ALL"
-  vpc_id               = aws_vpc.lab_vpc.id
-  iam_role_arn         = aws_iam_role.vpc_flow_logs_role.arn
+  log_destination          = aws_cloudwatch_log_group.vpc_flow_logs.arn
+  log_destination_type     = "cloud-watch-logs"
+  traffic_type             = "ALL"
+  vpc_id                   = aws_vpc.lab_vpc.id
+  iam_role_arn             = aws_iam_role.vpc_flow_logs_role.arn
   max_aggregation_interval = 60 # Optional: capture logs every 60 seconds
 
   tags = {

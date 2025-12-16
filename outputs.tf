@@ -14,3 +14,7 @@ output "jumpbox_public_ip" {
   value = module.jumpbox.jumpbox_public_ip
 }
 
+output "jumpbox_dns" {
+  value = aws_route53_record.jumpbox.fqdn
+}
+

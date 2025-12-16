@@ -27,7 +27,7 @@ variable "ad_ami" {
 }
 
 variable "jumpbox_ami" {
-  type        = string  
+  type    = string
   default = "ami-0ecb62995f68bb549"
 }
 
@@ -42,11 +42,11 @@ variable "ad_secret_arn" {
 }
 
 variable "router_iam_instance_profile" {
-  type        = string
+  type = string
 }
 
 variable "ad_iam_instance_profile" {
-  type        = string
+  type = string
 }
 
 variable "domain_name" {

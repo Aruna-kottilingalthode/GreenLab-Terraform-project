@@ -86,7 +86,6 @@ resource "aws_ssm_document" "cw_windows_install" {
 EOF
 }
 
-
 ##############################
 # Associations
 ##############################
@@ -118,4 +117,107 @@ resource "aws_ssm_association" "cw_windows_assoc" {
   max_concurrency     = "2"
   max_errors          = "1"
 }
+
+##############################
+# Router CloudWatch IAM Policy
+##############################
+
+resource "aws_iam_policy" "router_cloudwatch_policy" {
+  name        = "RouterCloudWatchPolicy"
+  description = "Allow Router instance to send metrics and logs to CloudWatch"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "cloudwatch:PutMetricData"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "router_cloudwatch_attach" {
+  role       = var.router_role_name
+  policy_arn = aws_iam_policy.router_cloudwatch_policy.arn
+}
+
+##############################
+# CloudWatch Dashboard
+##############################
+resource "aws_cloudwatch_dashboard" "infrastructure_dashboard" {
+  dashboard_name = "GreenLab-Infrastructure"
+  dashboard_body = jsonencode({
+    widgets = [
+      {
+        type   = "metric",
+        x      = 0,
+        y      = 0,
+        width  = 12,
+        height = 6,
+        properties = {
+          metrics = [
+            ["GreenLab/Lab", "CPUUtilization", "InstanceId", "${var.jumpbox_instance_id}"],
+            [".", "CPUUtilization", "InstanceId", "${var.router_instance_id}"]
+          ],
+          view    = "timeSeries",
+          stacked = false,
+          region  = var.region,
+          title   = "CPU Utilization"
+        }
+      },
+      {
+        type   = "metric",
+        x      = 0,
+        y      = 6,
+        width  = 12,
+        height = 6,
+        properties = {
+          metrics = [
+            ["GreenLab/Lab", "DiskUsedPercent", "InstanceId", "${var.jumpbox_instance_id}"],
+            [".", "DiskUsedPercent", "InstanceId", "${var.router_instance_id}"]
+          ],
+          view    = "timeSeries",
+          stacked = false,
+          region  = var.region,
+          title   = "Disk Usage"
+        }
+      }
+    ]
+  })
+}
+
+##############################
+# CloudWatch Alarms
+##############################
+resource "aws_cloudwatch_metric_alarm" "cpu_high_alarm" {
+  alarm_name          = "HighCPU-Alarm"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "GreenLab/Lab"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "75"
+  alarm_description   = "Alarm if CPU > 75%"
+  dimensions = {
+    InstanceId = var.router_instance_id
+  }
+  alarm_actions = [] # Add SNS if needed
+}
+
+
 

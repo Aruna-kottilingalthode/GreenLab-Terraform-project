@@ -6,6 +6,8 @@ resource "aws_instance" "kali" {
   vpc_security_group_ids = var.security_group_ids
   iam_instance_profile   = var.kali_iam_instance_profile
 
+  user_data = file("${path.module}/../../userdata/kali_userdata.sh")
+
   tags = {
     Name        = "Kali-VM"
     Monitoring  = "cloudwatch"

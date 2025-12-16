@@ -23,6 +23,26 @@ variable "ad_private_ip" {
   type        = string
 }
 
+variable "ad_domain" {
+  type        = string
+  description = "Active Directory domain name"
+}
+
+variable "ad_realm" {
+  type        = string
+  description = "Active Directory realm (usually uppercase domain)"
+}
+
+variable "secret_arn" {
+  type        = string
+  description = "ARN of the AD admin password secret in Secrets Manager"
+}
+
+variable "region" {
+  type        = string
+  description = "AWS region for the Jumpbox"
+}
+
 variable "user_data" {
   type        = string
   description = "Userdata script for Jumpbox instance"
