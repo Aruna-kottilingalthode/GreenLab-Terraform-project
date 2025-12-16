@@ -1,7 +1,9 @@
-aws_region = "us-east-1"
-key_name   = "my-key"
-office_ip  = "37.201.118.108"
+aws_region    = "us-east-1"
+key_name      = "my-key"
+office_ip     = "37.201.118.108"
 instance_type = "t3.micro"
+domain_name   = "lab.local"
+
 
 # AMI overrides
 # router_ami = "ami-0ecb62995f68bb549"

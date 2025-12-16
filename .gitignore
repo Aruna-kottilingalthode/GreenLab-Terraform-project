@@ -10,3 +10,5 @@ my-key.pem
 # OS files
 .DS_Store
 
+# SSH keys
+ec2-user@*
