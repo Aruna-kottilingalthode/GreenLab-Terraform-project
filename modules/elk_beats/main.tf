@@ -18,14 +18,13 @@ resource "aws_ssm_document" "filebeat_metricbeat" {
         "runCommand": [
           "set -e",
           "curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.10.0-amd64.deb",
-          "dpkg -i filebeat-8.10.0-amd64.deb",
+          "dpkg -i filebeat-8.10.0-amd64.deb || true",
           "curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-8.10.0-amd64.deb",
-          "dpkg -i metricbeat-8.10.0-amd64.deb",
+          "dpkg -i metricbeat-8.10.0-amd64.deb || true",
           "filebeat modules enable system",
           "metricbeat modules enable system",
           "sed -i 's|output.elasticsearch:.*|output.elasticsearch:\\n  hosts: [\"localhost:5044\"]|' /etc/filebeat/filebeat.yml",
           "sed -i 's|output.elasticsearch:.*|output.elasticsearch:\\n  hosts: [\"localhost:5044\"]|' /etc/metricbeat/metricbeat.yml",
-
           "systemctl enable filebeat && systemctl restart filebeat",
           "systemctl enable metricbeat && systemctl restart metricbeat"
         ]
@@ -42,9 +41,9 @@ resource "aws_ssm_association" "linux_beats_assoc" {
   targets {
     key = "InstanceIds"
     values = [
-      var.jumpbox_instance_id,
+      var.router_instance_id,
       var.kali_instance_id,
-      var.router_instance_id
+      var.jumpbox_instance_id
     ]
   }
 
@@ -72,6 +71,7 @@ resource "aws_ssm_document" "winlogbeat" {
       "name": "installWinlogbeat",
       "inputs": {
         "runCommand": [
+          "if (-not (Test-Path -Path 'C:\\Temp')) { New-Item -ItemType Directory -Path 'C:\\Temp' | Out-Null }",
           "Invoke-WebRequest -Uri https://artifacts.elastic.co/downloads/beats/winlogbeat/winlogbeat-8.10.0-windows-x86_64.zip -OutFile C:\\Temp\\winlogbeat.zip",
           "Expand-Archive -Path C:\\Temp\\winlogbeat.zip -DestinationPath C:\\Program Files\\Winlogbeat -Force",
           "Set-ExecutionPolicy Unrestricted -Force",

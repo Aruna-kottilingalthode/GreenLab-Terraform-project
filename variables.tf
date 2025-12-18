@@ -59,6 +59,10 @@ variable "cw_windows_document_name" {
   description = "Name of the imported CloudWatch Windows SSM Document"
 }
 
+variable "vpc_id" {
+  description = "The VPC ID to monitor for NetworkPackets metrics in CloudWatch"
+  type        = string
+}
 
 
 

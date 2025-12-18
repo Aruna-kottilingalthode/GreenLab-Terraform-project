@@ -19,3 +19,5 @@ router_iam_instance_profile = "Router-EC2-Role"
 
 cw_windows_document_name = "CWAgentInstall-Windows-2025-12-09T10-41-41Z"
 
+# this line for CloudWatch dashboard
+vpc_id = "vpc-0abcd1234ef567890"

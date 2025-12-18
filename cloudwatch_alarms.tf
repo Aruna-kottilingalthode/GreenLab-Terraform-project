@@ -1,136 +1,51 @@
-##############################
-# CPU Alarms
-##############################
-
-# Jumpbox CPU alarm
-resource "aws_cloudwatch_metric_alarm" "high_cpu_jumpbox" {
-  alarm_name          = "Jumpbox-HighCPU"
+# CPU High Alarm (75%)
+resource "aws_cloudwatch_metric_alarm" "cpu_high" {
+  alarm_name          = "GreenLab-CPU-High"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
-  namespace           = "AWS/EC2"
-  period              = 300
+  namespace           = "GreenLab/Lab"
+  period              = 60
   statistic           = "Average"
-  threshold           = 80
-
-  dimensions = {
-    InstanceId = module.jumpbox.jumpbox_instance_id
-  }
-}
-
-# Router CPU alarm
-resource "aws_cloudwatch_metric_alarm" "high_cpu_router" {
-  alarm_name          = "Router-HighCPU"
-  comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 2
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/EC2"
-  period              = 300
-  statistic           = "Average"
-  threshold           = 80
-
+  threshold           = 75
+  alarm_description   = "Alarm if CPU > 75%"
   dimensions = {
     InstanceId = module.router.router_instance_id
   }
+  alarm_actions = [] # Add SNS ARN if needed
 }
 
-# Kali CPU alarm
-resource "aws_cloudwatch_metric_alarm" "high_cpu_kali" {
-  alarm_name          = "Kali-HighCPU"
+# Memory High Alarm (80%)
+resource "aws_cloudwatch_metric_alarm" "mem_high" {
+  alarm_name          = "GreenLab-Memory-High"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/EC2"
-  period              = 300
-  statistic           = "Average"
-  threshold           = 80
-
-  dimensions = {
-    InstanceId = module.kali.kali_instance_id
-  }
-}
-
-# AD CPU alarm
-resource "aws_cloudwatch_metric_alarm" "high_cpu_ad" {
-  alarm_name          = "AD-HighCPU"
-  comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 2
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/EC2"
-  period              = 300
-  statistic           = "Average"
-  threshold           = 80
-
-  dimensions = {
-    InstanceId = module.ad.ad_instance_id
-  }
-}
-
-##############################
-# Disk Used % Alarms
-##############################
-
-# Jumpbox Disk Used %
-resource "aws_cloudwatch_metric_alarm" "disk_used_jumpbox" {
-  alarm_name          = "Jumpbox-DiskUsedPercent"
-  comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 2
-  metric_name         = "DiskUsedPercent"
+  metric_name         = "mem_used_percent"
   namespace           = "GreenLab/Lab"
-  period              = 300
+  period              = 60
   statistic           = "Average"
   threshold           = 80
-
-  dimensions = {
-    InstanceId = module.jumpbox.jumpbox_instance_id
-  }
-}
-
-# Router Disk Used %
-resource "aws_cloudwatch_metric_alarm" "disk_used_router" {
-  alarm_name          = "Router-DiskUsedPercent"
-  comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 2
-  metric_name         = "DiskUsedPercent"
-  namespace           = "GreenLab/Lab"
-  period              = 300
-  statistic           = "Average"
-  threshold           = 80
-
+  alarm_description   = "Alarm if Memory > 80%"
   dimensions = {
     InstanceId = module.router.router_instance_id
   }
+  alarm_actions = []
 }
 
-# Kali Disk Used %
-resource "aws_cloudwatch_metric_alarm" "disk_used_kali" {
-  alarm_name          = "Kali-DiskUsedPercent"
+# Disk Usage High Alarm (90%)
+resource "aws_cloudwatch_metric_alarm" "disk_high" {
+  alarm_name          = "GreenLab-Disk-High"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
-  metric_name         = "DiskUsedPercent"
+  metric_name         = "disk_used_percent"
   namespace           = "GreenLab/Lab"
   period              = 300
   statistic           = "Average"
-  threshold           = 80
-
+  threshold           = 90
+  alarm_description   = "Alarm if Disk Usage > 90%"
   dimensions = {
-    InstanceId = module.kali.kali_instance_id
+    InstanceId = module.router.router_instance_id
   }
-}
-
-# AD Disk Used %
-resource "aws_cloudwatch_metric_alarm" "disk_used_ad" {
-  alarm_name          = "AD-DiskUsedPercent"
-  comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 2
-  metric_name         = "DiskUsedPercent"
-  namespace           = "GreenLab/Lab"
-  period              = 300
-  statistic           = "Average"
-  threshold           = 80
-
-  dimensions = {
-    InstanceId = module.ad.ad_instance_id
-  }
+  alarm_actions = []
 }
 
